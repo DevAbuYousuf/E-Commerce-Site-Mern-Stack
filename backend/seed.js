@@ -78,3 +78,4 @@ const importData = async () => {
 };
 
 importData();
+seedDatabase();
