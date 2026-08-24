@@ -1,9 +1,22 @@
 const express = require('express');
-const { createOrder, verifyPayment } = require('../controllers/paymentController');
+
+const {
+  createPayment,
+  paymentSuccess,
+  paymentFail,
+  paymentCancel,
+  paymentIPN
+} = require('../controllers/paymentController');
 
 const router = express.Router();
 
-router.post('/order', createOrder);
-router.post('/verify', verifyPayment);
+// Initialize SSLCommerz payment
+router.post('/create', createPayment);
+
+// SSLCommerz callbacks
+router.post('/success', paymentSuccess);
+router.post('/fail', paymentFail);
+router.post('/cancel', paymentCancel);
+router.post('/ipn', paymentIPN);
 
 module.exports = router;
