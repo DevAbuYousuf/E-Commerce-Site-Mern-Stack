@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import '../styles/auth.css';
+import API_URL from '../api';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -10,26 +11,32 @@ const Register = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
-      });
-      const data = await res.json();
-      if (res.ok) {
-        alert('Registration Successful! Please check your email for the Welcome OTP.');
-        login(data);
-        navigate('/');
-      } else {
-        alert(data.message);
-      }
-    } catch (error) {
-      console.error(error);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    const res = await fetch(`${API_URL}/api/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ name, email, password })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert('Registration Successful! Please check your email for the Welcome OTP.');
+      login(data);
+      navigate('/');
+    } else {
+      alert(data.message);
     }
-  };
+  } catch (error) {
+    console.error('Registration error:', error);
+    alert('Unable to connect to server');
+  }
+};
 
   return (
     <div className="auth-container">
